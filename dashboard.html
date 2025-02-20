@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Somirin and Me 💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff0f5;
+            overflow: hidden;
+        }
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #ff69b4;
+            margin-top: 50px;
+        }
+        button {
+            display: block;
+            margin: 15px auto;
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            background-color: pink;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 80%;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #ff1493;
+        }
+        .floating {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.8;
+            animation: float 4s linear infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body><h1>Welcome to Our Love Hub 💕</h1>
+
+<button onclick="location.href='love-counter.html'">Love Counter ⏳</button>
+<button onclick="location.href='special-dates.html'">Special Dates 📅</button>
+<button onclick="location.href='music.html'">Our Song 🎶</button>
+<button onclick="location.href='games.html'">Let's Play! 🎮</button>
+<button onclick="location.href='future-plans.html'">Future Plans 💭</button>
+<button onclick="location.href='cbt.html'">Anxiety Support 🧘‍♀️</button>
+
+<script>
+    function createFloatingElement() {
+        const element = document.createElement("div");
+        element.classList.add("floating");
+        element.innerHTML = Math.random() > 0.5 ? "❤️" : "🌸";
+        element.style.left = Math.random() * 100 + "vw";
+        element.style.animationDuration = Math.random() * 3 + 3 + "s";
+        document.body.appendChild(element);
+        setTimeout(() => element.remove(), 5000);
+    }
+    setInterval(createFloatingElement, 400);
+</script>
+
+</body>
+</html>

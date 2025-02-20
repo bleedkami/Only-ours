@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Plans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <script type="module">
+        // ✅ Import Firebase (Modular Syntax)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, push, set, onChildAdded, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+        // ✅ Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyCKd4Yt2XcLAdHt2HHwuNRoilug96JT6bw",
+            authDomain: "songs-ce5f3.firebaseapp.com",
+            databaseURL: "https://songs-ce5f3-default-rtdb.firebaseio.com",
+            projectId: "songs-ce5f3",
+            storageBucket: "songs-ce5f3.appspot.com",
+            messagingSenderId: "903689554526",
+            appId: "1:903689554526:web:f121ded6313b99277e82cf",
+            measurementId: "G-J5N88MVM65"
+        };
+
+        // ✅ Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const plansRef = ref(db, "futurePlans");
+
+        // ✅ Function to Add Plan
+        function addPlan() {
+            const input = document.getElementById("planInput");
+            const planText = input.value.trim();
+            if (planText === "") return;
+
+            const newPlanRef = push(plansRef);
+            set(newPlanRef, { text: planText });
+
+            input.value = "";
+        }
+
+        // ✅ Function to Load Plans in Real Time
+        function loadPlans() {
+            const planList = document.getElementById("planList");
+
+            onChildAdded(plansRef, (snapshot) => {
+                const planData = snapshot.val();
+                const planId = snapshot.key;
+
+                const li = document.createElement("li");
+                li.innerHTML = `${planData.text} 
+                    <button class='delete-btn' onclick='deletePlan("${planId}")'>❌</button>`;
+                li.setAttribute("id", planId);
+                planList.appendChild(li);
+            });
+        }
+
+        // ✅ Function to Delete Plan
+        function deletePlan(planId) {
+            remove(ref(db, `futurePlans/${planId}`));
+
+            // Remove from UI
+            const planItem = document.getElementById(planId);
+            if (planItem) planItem.remove();
+        }
+
+        document.addEventListener("DOMContentLoaded", loadPlans);
+        window.addPlan = addPlan;  // Make it accessible in HTML
+        window.deletePlan = deletePlan;
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff0f5;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #ff1493;
+        }
+        .plan-container {
+            margin-top: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 80%;
+            max-width: 300px;
+            border: 2px solid #ff1493;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #ff1493;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #ff69b4;
+        }
+        .plan-list {
+            list-style: none;
+            padding: 0;
+        }
+        .plan-list li {
+            background: white;
+            margin: 5px auto;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 80%;
+            max-width: 350px;
+        }
+        .delete-btn {
+            background-color: red;
+            border: none;
+            padding: 5px 10px;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Future Plans</h1>
+    <div class="plan-container">
+        <input type="text" id="planInput" placeholder="Enter a plan...">
+        <button onclick="addPlan()">Add Plan</button>
+        <ul class="plan-list" id="planList"></ul>
+    </div>
+    <a href="dashboard.html" style="display: block; margin-top: 20px; color: #ff1493; text-decoration: none;">⬅ Back to Dashboard</a>
+</body>
+</html>

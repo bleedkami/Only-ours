@@ -1,0 +1,173 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT Support</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff0f5;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #ff1493;
+        }
+        .exercise {
+            background: white;
+            padding: 15px;
+            margin: 10px auto;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #ff1493;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #d11580;
+        }
+        textarea {
+            width: 90%;
+            height: 80px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        #journal-entries {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .entry {
+            background: #ffe6f2;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>CBT Support for Somirin</h1><div class="exercise">
+    <h2>Introduction to Anxiety</h2>
+    <p>Anxiety is a natural response to stress or danger, but sometimes it can feel overwhelming. Understanding anxiety can help in managing it better. Remember, you are not alone, and your feelings are valid.</p>
+</div>
+
+<div class="exercise">
+    <h2>Journaling</h2>
+    <p>Write down your thoughts:</p>
+    <textarea id="journal"></textarea>
+    <button onclick="saveJournal()">Save</button>
+</div>
+
+<div class="exercise">
+    <h2>Past Journal Entries</h2>
+    <button onclick="viewJournals()">View Past Entries</button>
+    <div id="journal-entries"></div>
+</div>
+
+<div class="exercise">
+    <h2>Affirmations</h2>
+    <p id="affirmation">Click below for a positive affirmation!</p>
+    <button onclick="generateAffirmation()">New Affirmation</button>
+</div>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCKd4Yt2XcLAdHt2HHwuNRoilug96JT6bw",
+        authDomain: "songs-ce5f3.firebaseapp.com",
+        projectId: "songs-ce5f3",
+        storageBucket: "songs-ce5f3.appspot.com",
+        messagingSenderId: "903689554526",
+        appId: "1:903689554526:web:f121ded6313b99277e82cf",
+        measurementId: "G-J5N88MVM65"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    
+    function saveJournal() {
+        const entry = document.getElementById("journal").value;
+        if (entry) {
+            db.collection("journals").add({
+                text: entry,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            })
+            .then(() => {
+                alert("Your journal entry has been saved!");
+                document.getElementById("journal").value = "";
+                viewJournals();
+            })
+            .catch(error => {
+                console.error("Error saving journal entry: ", error);
+            });
+        } else {
+            alert("Please write something before saving.");
+        }
+    }
+    
+    function viewJournals() {
+        let journalDiv = document.getElementById("journal-entries");
+        journalDiv.innerHTML = "";
+        
+        db.collection("journals").orderBy("timestamp", "desc").get().then(snapshot => {
+            if (snapshot.empty) {
+                journalDiv.innerHTML = "<p>No past entries found.</p>";
+                return;
+            }
+            snapshot.forEach(doc => {
+                let data = doc.data();
+                let div = document.createElement("div");
+                div.className = "entry";
+                div.innerHTML = `<p>${data.text}</p> <button onclick="deleteJournal('${doc.id}')">Delete</button>`;
+                journalDiv.appendChild(div);
+            });
+        });
+    }
+
+    function deleteJournal(id) {
+        db.collection("journals").doc(id).delete().then(() => {
+            alert("Journal entry deleted!");
+            viewJournals();
+        }).catch(error => {
+            console.error("Error deleting journal entry: ", error);
+        });
+    }
+
+    function generateAffirmation() {
+        const affirmations = [
+            "You are loved and appreciated.",
+            "You are stronger than your anxiety.",
+            "You deserve happiness and peace.",
+            "Every day, you are growing and healing.",
+            "You are enough just as you are.",
+            "You are capable of handling anything that comes your way.",
+            "You're my one and only Somi"
+        
+            
+        ];
+        
+        const randomIndex = Math.floor(Math.random() * affirmations.length);
+        document.getElementById("affirmation").innerText = affirmations[randomIndex];
+    }
+</script>
+
+</body>
+</html>

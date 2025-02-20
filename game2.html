@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breathing Exercise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff0f5;
+            text-align: center;
+        }
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #ff1493;
+        }
+        .circle {
+            width: 150px;
+            height: 150px;
+            background-color: #ffb6c1;
+            border-radius: 50%;
+            margin: 50px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            transition: transform 4s ease-in-out, background-color 1s;
+        }
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #ff1493;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        .controls button:hover {
+            background-color: #d11275;
+        }
+    </style>
+</head>
+<body>
+    <h1>Breathing Exercise</h1>
+    <p>Follow the animation: Inhale, Hold, Exhale.</p>
+    <div class="circle" id="breathCircle">Inhale</div>
+    <div class="controls">
+        <button onclick="startBreathing()">Start</button>
+        <button onclick="stopBreathing()">Stop</button>
+    </div>
+    <br>
+    <a href="games.html" style="text-decoration: none; font-size: 18px; color: #ff1493;">Back to Games</a><script>
+    let breathCircle = document.getElementById("breathCircle");
+    let interval;
+    let steps = [
+        { text: "Inhale", scale: "1.5", color: "#ffb6c1" },
+        { text: "Hold", scale: "1.5", color: "#ffc0cb" },
+        { text: "Exhale", scale: "1", color: "#ff69b4" },
+        { text: "Hold", scale: "1", color: "#ff85a2" }
+    ];
+    let stepIndex = 0;
+    
+    function startBreathing() {
+        stopBreathing();
+        stepIndex = 0;
+        changeBreath();
+        interval = setInterval(changeBreath, 4000);
+    }
+    
+    function changeBreath() {
+        let step = steps[stepIndex];
+        breathCircle.innerText = step.text;
+        breathCircle.style.transform = `scale(${step.scale})`;
+        breathCircle.style.backgroundColor = step.color;
+        stepIndex = (stepIndex + 1) % steps.length;
+    }
+    
+    function stopBreathing() {
+        clearInterval(interval);
+        breathCircle.innerText = "Inhale";
+        breathCircle.style.transform = "scale(1)";
+        breathCircle.style.backgroundColor = "#ffb6c1";
+    }
+</script>
+
+</body>
+</html>
